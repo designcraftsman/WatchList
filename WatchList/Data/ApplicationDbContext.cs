@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using WatchList.Models;
 
 namespace WatchList.Data
 {
@@ -10,7 +11,7 @@ namespace WatchList.Data
         {
         }
         public DbSet<Film> Films { get; set; }
-        public DbSet<FilmUser> FilmsUser { get; set; }
+        public DbSet<FilmUser> FilmUser { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -18,5 +19,6 @@ namespace WatchList.Data
             modelBuilder.Entity<FilmUser>()
             .HasKey(t => new { t.IdUser, t.IdFilm });
         }
+        public DbSet<WatchList.Models.ModelViewFilm> ModelViewFilm { get; set; } = default!;
     }
 }

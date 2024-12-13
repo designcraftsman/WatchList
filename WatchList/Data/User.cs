@@ -4,10 +4,10 @@
     {
         public User() : base()
         {
-            this.ListFilms = new HashSet<FilmUser>();
+            this.FilmsList = new HashSet<FilmUser>();
         }
 
-        public string Prenom { get; set; }
-        public virtual ICollection<FilmUser> ListFilms { get; set; }
+        public string LastName { get; set; }
+        public virtual ICollection<FilmUser> FilmsList { get; set; }
     }
 }
