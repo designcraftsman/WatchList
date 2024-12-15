@@ -1,4 +1,5 @@
-﻿namespace WatchList.Data
+﻿
+namespace WatchList.Data
 {
     public class FilmUser
     {
@@ -6,8 +7,5 @@
         public int IdFilm { get; set; }
         public bool Viewed { get; set; }
         public int Note { get; set; }
-
-        public virtual User User { get; set; }
-        public virtual Film Film { get; set; }
     }
 }

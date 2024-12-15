@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WatchList.Data;
 using WatchList.Models;
 
@@ -24,8 +25,15 @@ namespace WatchList.Controllers
         public async Task<string> RecupererIdUtilisateurCourant()
         {
             User user = await GetCurrentUserAsync();
+            if (user == null)
+            {
+                Console.WriteLine("User is null. Not logged in?");
+                return null;
+            }
+            Console.WriteLine($"Current User ID: {user.Id}");
             return user?.Id;
         }
+
         public async Task<IActionResult> Index()
         {
             var id = await RecupererIdUtilisateurCourant();
@@ -33,8 +41,6 @@ namespace WatchList.Controllers
             var modele = FilmUser.Select(x => new ModelViewFilm
             {
                 IdFilm = x.IdFilm,
-                Title = x.Film.Title,
-                Year = x.Film.Year,
                 View = x.Viewed,
                 PresentInList = true,
                 Note = x.Note
@@ -42,5 +48,75 @@ namespace WatchList.Controllers
 
             return View(modele);
         }
+
+
+        [HttpPost]
+        public async Task<IActionResult> AddFilm(int idFilm)
+        {
+            try
+            {
+                var currentUser = await GetCurrentUserAsync();
+                if (currentUser == null)
+                {
+                    return BadRequest("User not found.");
+                }
+
+                Console.WriteLine(currentUser.Id);
+                var filmUser = new FilmUser
+                {
+                    IdUser = currentUser.Id,// Ensure this line assigns the correct user ID
+                    IdFilm = idFilm,
+                    Viewed = false,
+                    Note = 0
+                };
+
+                Console.WriteLine(filmUser); 
+
+                _contexte.FilmUser.Add(filmUser);
+                await _contexte.SaveChangesAsync();
+                return Ok("Film added successfully!");
+            }
+            catch (Exception ex)
+            {
+                // Log the exception for debugging
+                Console.WriteLine($"Error adding film: {ex.Message}");
+                if (ex.InnerException != null)
+                    Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
+
+                return StatusCode(500, "An error occurred while adding the film.");
+            }
+        }
+
+
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveFilm(int idFilm)
+        {
+            var idUser = await RecupererIdUtilisateurCourant();
+            if (idUser == null)
+            {
+                return Unauthorized(); // User must be logged in.
+            }
+
+            // Find the film in the user's watchlist.
+            var filmToRemove = await _contexte.FilmUser
+                .FirstOrDefaultAsync(fu => fu.IdUser == idUser && fu.IdFilm == idFilm);
+
+            if (filmToRemove == null)
+            {
+                return BadRequest("Film is not in your watchlist."); // Prevent invalid deletions.
+            }
+
+            // Remove the film.
+            _contexte.FilmUser.Remove(filmToRemove);
+            await _contexte.SaveChangesAsync();
+
+            return Ok("Film removed from your watchlist.");
+        }
+
+
+
     }
 }

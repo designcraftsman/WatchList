@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WatchList.Data;
+using WatchList.Models;
 
 namespace WatchList.Controllers
 {
@@ -21,7 +21,7 @@ namespace WatchList.Controllers
         // GET: Films
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Films.ToListAsync());
+            return View(await _context.ModelViewFilm.ToListAsync());
         }
 
         // GET: Films/Details/5
@@ -32,8 +32,8 @@ namespace WatchList.Controllers
                 return NotFound();
             }
 
-            var film = await _context.Films
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var film = await _context.ModelViewFilm.FirstOrDefaultAsync(m => m.IdFilm == id);
+
             if (film == null)
             {
                 return NotFound();
@@ -49,11 +49,9 @@ namespace WatchList.Controllers
         }
 
         // POST: Films/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Titre,Annee")] Film film)
+        public async Task<IActionResult> Create([Bind("IdFilm,Title,Year,PresentInList,View,Note")] ModelViewFilm film)
         {
             if (ModelState.IsValid)
             {
@@ -72,7 +70,7 @@ namespace WatchList.Controllers
                 return NotFound();
             }
 
-            var film = await _context.Films.FindAsync(id);
+            var film = await _context.ModelViewFilm.FindAsync(id);
             if (film == null)
             {
                 return NotFound();
@@ -81,13 +79,11 @@ namespace WatchList.Controllers
         }
 
         // POST: Films/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Titre,Annee")] Film film)
+        public async Task<IActionResult> Edit(int id, [Bind("IdFilm,Title,Year,PresentInList,View,Note")] ModelViewFilm film)
         {
-            if (id != film.Id)
+            if (id != film.IdFilm)
             {
                 return NotFound();
             }
@@ -101,7 +97,7 @@ namespace WatchList.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!FilmExists(film.Id))
+                    if (!ModelViewFilmExists(film.IdFilm))
                     {
                         return NotFound();
                     }
@@ -123,8 +119,8 @@ namespace WatchList.Controllers
                 return NotFound();
             }
 
-            var film = await _context.Films
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var film = await _context.ModelViewFilm
+                .FirstOrDefaultAsync(m => m.IdFilm == id);
             if (film == null)
             {
                 return NotFound();
@@ -138,19 +134,22 @@ namespace WatchList.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var film = await _context.Films.FindAsync(id);
+            var film = await _context.ModelViewFilm.FindAsync(id);
             if (film != null)
             {
-                _context.Films.Remove(film);
+                _context.ModelViewFilm.Remove(film);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool FilmExists(int id)
+        private bool ModelViewFilmExists(int id)
         {
-            return _context.Films.Any(e => e.Id == id);
+            return _context.ModelViewFilm.Any(e => e.IdFilm == id);
         }
+
+      
+
     }
 }

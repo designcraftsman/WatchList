@@ -32,6 +32,10 @@ build_property.EnableCodeStyleSeverity =
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/fayzo/OneDrive/Bureau/ASP.NET/WatchList/WatchList/Views/FilmList/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmlsbUxpc3RcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/fayzo/OneDrive/Bureau/ASP.NET/WatchList/WatchList/Views/FilmsList/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmlsbXNMaXN0XEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 

@@ -1,41 +1,53 @@
-﻿@model IEnumerable<WatchList.Data.Film>
+﻿@model IEnumerable<WatchList.Models.ModelViewFilm>
 
-@{
-    ViewData["Title"] = "Index";
-}
+<h1>My Film List</h1>
 
-<h1>Index</h1>
+<!-- Button to Add a New Film -->
+<div class="mb-3">
+    <a asp-action="Create" asp-route-id="">Add</a>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Year)
-            </th>
-            <th></th>
+            <th>Title</th>
+            <th>Year</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Year)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var film in Model)
+        {
+            <tr>
+                <td>@film.Title</td>
+                <td>@film.Year</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@film.IdFilm">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@film.IdFilm">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@film.IdFilm">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Remove a film from the list
+            $(document).on('click', '.remove-film', function () {
+                const idFilm = $(this).data('id'); // Retrieve the film ID
+
+                $.post('/Films/Delete', { idFilm: idFilm })
+                    .done(function (response) {
+                        alert(response); // Display success message
+                        location.reload(); // Reload page to update the list
+                    })
+                    .fail(function (xhr) {
+                        alert(`Failed to remove film: ${xhr.responseText}`); // Show error message
+                    });
+            });
+        });
+    </script>
+}

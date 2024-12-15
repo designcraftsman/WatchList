@@ -7,7 +7,6 @@
             this.FilmsList = new HashSet<FilmUser>();
         }
 
-        public string LastName { get; set; }
         public virtual ICollection<FilmUser> FilmsList { get; set; }
     }
 }

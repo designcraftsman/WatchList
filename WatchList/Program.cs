@@ -41,6 +41,8 @@ else
 app.UseHttpsRedirection(); // Redirect HTTP to HTTPS
 app.UseStaticFiles(); // Serve static files like CSS, JS, and images
 
+app.UseDeveloperExceptionPage();
+
 app.UseRouting(); // Enable routing middleware
 
 app.UseAuthentication(); // Add authentication middleware
