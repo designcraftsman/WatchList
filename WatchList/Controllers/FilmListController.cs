@@ -61,19 +61,17 @@ namespace WatchList.Controllers
                     return BadRequest("User not found.");
                 }
 
-                Console.WriteLine(currentUser.Id);
                 var filmUser = new FilmUser
                 {
-                    IdUser = currentUser.Id,// Ensure this line assigns the correct user ID
+                    IdUser = currentUser.Id, // Ensure the correct user ID is assigned
                     IdFilm = idFilm,
                     Viewed = false,
                     Note = 0
                 };
 
-                Console.WriteLine(filmUser); 
-
                 _contexte.FilmUser.Add(filmUser);
                 await _contexte.SaveChangesAsync();
+
                 return Ok("Film added successfully!");
             }
             catch (Exception ex)
@@ -86,6 +84,7 @@ namespace WatchList.Controllers
                 return StatusCode(500, "An error occurred while adding the film.");
             }
         }
+
 
 
 

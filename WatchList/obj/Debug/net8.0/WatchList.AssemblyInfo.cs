@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("WatchList")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1d4c731b5d8d17fb60e4f8347a270fdcda9e6863")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0794ae63b17c9c93d2a1bd434504940f92017a17")]
 [assembly: System.Reflection.AssemblyProductAttribute("WatchList")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WatchList")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

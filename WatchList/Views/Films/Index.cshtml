@@ -25,6 +25,7 @@
                     <a asp-action="Edit" asp-route-id="@film.IdFilm">Edit</a> |
                     <a asp-action="Details" asp-route-id="@film.IdFilm">Details</a> |
                     <a asp-action="Delete" asp-route-id="@film.IdFilm">Delete</a>
+                    <button class="btn btn-primary add-film" data-id="@film.IdFilm">Add to Watchlist</button>
                 </td>
             </tr>
         }
@@ -35,19 +36,19 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
-            // Remove a film from the list
-            $(document).on('click', '.remove-film', function () {
-                const idFilm = $(this).data('id'); // Retrieve the film ID
+            // Handle "Add to Watchlist" button click
+            $(document).on('click', '.add-film', function () {
+                const idFilm = $(this).data('id'); // Retrieve film ID
 
-                $.post('/Films/Delete', { idFilm: idFilm })
+                $.post('/FilmList/AddFilm', { idFilm: idFilm })
                     .done(function (response) {
-                        alert(response); // Display success message
-                        location.reload(); // Reload page to update the list
+                        alert(response); // Notify user of success
                     })
                     .fail(function (xhr) {
-                        alert(`Failed to remove film: ${xhr.responseText}`); // Show error message
+                        alert(`Failed to add film: ${xhr.responseText}`); // Show error message
                     });
             });
         });
     </script>
 }
+
