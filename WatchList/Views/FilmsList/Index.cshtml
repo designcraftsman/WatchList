@@ -1,59 +1,61 @@
 ﻿@model IEnumerable<WatchList.Models.ModelViewFilm>
 
-@{
-    ViewData["Title"] = "Index";
-}
+<h1 class="my-4">My Film List</h1>
 
-<h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
+<!-- Display the film list -->
+<table class="table table-bordered table-striped table-hover">
+    <thead class="thead-dark">
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Year)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PresentInList)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.View)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Note)
-            </th>
-            <th></th>
+            <th scope="col">Title</th>
+            <th scope="col">Year</th>
+            <th scope="col" class="text-center">Actions</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Year)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PresentInList)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.View)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Note)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdFilm">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdFilm">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdFilm">Delete</a>
-            </td>
-        </tr>
-}
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="3" class="text-center text-muted">
+                    No films found in your list. <a asp-action="Create" class="text-primary">Add a new film</a>.
+                </td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var film in Model)
+            {
+                <tr>
+                    <td>@film.Title</td>
+                    <td>@film.Year</td>
+                    <td class="text-center">
+                        <a asp-action="Edit" asp-route-id="@film.IdFilm" class="btn btn-warning btn-sm mx-1">Edit</a>
+                        <a asp-action="Details" asp-route-id="@film.IdFilm" class="btn btn-info btn-sm mx-1">Details</a>
+                        <a asp-action="Delete" asp-route-id="@film.IdFilm" class="btn btn-danger btn-sm mx-1">Delete</a>
+                        <button class="btn btn-primary btn-sm add-film mx-1" data-id="@film.IdFilm">Add to Watchlist</button>
+                    </td>
+                </tr>
+            }
+        }
     </tbody>
 </table>
+
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Handle "Add to Watchlist" button click
+            $(document).on('click', '.add-film', function () {
+                const idFilm = $(this).data('id'); // Retrieve film ID
+
+                $.post('/FilmList/AddFilm', { idFilm: idFilm })
+                    .done(function (response) {
+                        alert(response); // Notify user of success
+                    })
+                    .fail(function (xhr) {
+                        alert(`Failed to add film: ${xhr.responseText}`); // Show error message
+                    });
+            });
+        });
+    </script>
+}

@@ -36,18 +36,35 @@ namespace WatchList.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var id = await RecupererIdUtilisateurCourant();
-            var FilmUser = _contexte.FilmUser.Where(x => x.IdUser == id);
-            var modele = FilmUser.Select(x => new ModelViewFilm
+            // Get the current user's ID
+            var userId = await RecupererIdUtilisateurCourant();
+            if (userId == null)
             {
-                IdFilm = x.IdFilm,
-                View = x.Viewed,
-                PresentInList = true,
-                Note = x.Note
-            }).ToList();
+                return Unauthorized(); // User must be logged in
+            }
 
-            return View(modele);
+            // Fetch the user's films along with their details from the database
+            var userFilms = await _contexte.FilmUser
+                .Where(fu => fu.IdUser == userId)
+                .Join(
+                    _contexte.ModelViewFilm, // Join with ModelViewFilm
+                    fu => fu.IdFilm,         // Join on IdFilm
+                    mf => mf.IdFilm,         // Match on IdFilm
+                    (fu, mf) => new ModelViewFilm
+                    {
+                        IdFilm = mf.IdFilm,
+                        Title = mf.Title,
+                        Year = mf.Year,
+                        PresentInList = true,
+                        View = fu.Viewed,
+                        Note = fu.Note
+                    }
+                )
+                .ToListAsync();
+
+            return View(userFilms);
         }
+
 
 
         [HttpPost]
